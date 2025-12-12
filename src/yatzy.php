@@ -21,6 +21,24 @@ class yatzy
         $this->dice[3] = $d4;
         $this->dice[4] = $_5;
     }
+
+    /**
+     * NOUVEAU : Méthode statique utilitaire pour compter les occurrences des dés.
+     * Ceci supprime la duplication de code dans toutes les méthodes d'évaluation (yatzyScore, fullHouse, etc.)
+     * en acceptant le même format d'input (5 arguments séparés).
+     */
+    private static function getDiceCountsFromArgs(int $d1, int $d2, int $d3, int $d4, int $d5): array
+    {
+        $dice = [$d1, $d2, $d3, $d4, $d5];
+        $counts = array_fill(0, 6, 0); // Index 0 pour dé 1, index 5 pour dé 6
+
+        foreach ($dice as $die) {
+            if ($die >= 1 && $die <= 6) {
+                $counts[$die - 1]++;
+            }
+        }
+        return $counts;
+    }
     /**
      * SMELL: Incohérence dans l'input.
      * Cette fonction, comme beaucoup d'autres, prend 5 arguments séparés (d1 à d5),
@@ -29,13 +47,7 @@ class yatzy
      */
     public static function chance(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $total = 0;
-        $total += $d1;
-        $total += $d2;
-        $total += $d3;
-        $total += $d4;
-        $total += $d5;
-        return $total;
+        return $d1 + $d2 + $d3 + $d4 + $d5;
     }
 
     /**
@@ -191,7 +203,7 @@ class yatzy
      */
     public function score_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $counts = array_fill(0, 6, 0);
+        $counts = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
         ++$counts[$d1 - 1];
         ++$counts[$d2 - 1];
         ++$counts[$d3 - 1];
@@ -209,7 +221,7 @@ class yatzy
      */
     public static function two_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $counts = array_fill(0, 6, 0);
+        $counts = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
         ++$counts[$d1 - 1];
         ++$counts[$d2 - 1];
         ++$counts[$d3 - 1];
@@ -233,7 +245,7 @@ class yatzy
 
     public static function three_of_a_kind(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $t = array_fill(0, 6, 0);
+        $t = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
         ++$t[$d1 - 1];
         ++$t[$d2 - 1];
         ++$t[$d3 - 1];
@@ -249,7 +261,7 @@ class yatzy
 
     public static function smallStraight(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $tallies = array_fill(0, 6, 0);
+        $tallies = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
         ++$tallies[$d1 - 1];
         ++$tallies[$d2 - 1];
         ++$tallies[$d3 - 1];
