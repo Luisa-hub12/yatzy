@@ -10,7 +10,6 @@ use Yatzy\yatzy;
 class YatzyTest extends TestCase
 {
     public function testChanceScoresSumOfAllDice(): void
-
     {
         $expected = 15;
         $actual = yatzy::chance(2, 3, 4, 5, 1);

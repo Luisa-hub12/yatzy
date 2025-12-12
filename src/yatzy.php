@@ -13,7 +13,6 @@ class yatzy
 
     public function __construct(int $d1, int $d2, int $d3, int $d4, int $_5)
     {
-        // SMELL: Variable obscure. Le nom $_5 n'est pas clair.
         $this->dice = array_fill(0, 5, 0);
         $this->dice[0] = $d1;
         $this->dice[1] = $d2;
@@ -21,12 +20,7 @@ class yatzy
         $this->dice[3] = $d4;
         $this->dice[4] = $_5;
     }
-    /**
-     * SMELL: Incohérence dans l'input.
-     * Cette fonction, comme beaucoup d'autres, prend 5 arguments séparés (d1 à d5),
-     * alors que les méthodes d'instance (fours, fives, sixes) utilisent le tableau $this->dice.
-     * Cela complexifie l'usage.
-     */
+
     public static function chance(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $total = 0;
@@ -40,10 +34,7 @@ class yatzy
 
     /**
      * @param array<int, int> $dice
-     * SMELL : Duplucation de code.
-     * La logique de comptage de fréquence des dés (L45-48) est répétée dans presque toutes les fonctions d'évaluation.
      */
-
     public static function yatzyScore(array $dice): int
     {
         $counts = array_fill(0, 6, 0);
@@ -141,8 +132,6 @@ class yatzy
 
     public function fours(): int
     {
-        // SMELL: Duplication de logique. La boucle d'itération (L121-124) est répétée dans Fives() et sixes().
-        // Ces trois méthodes d'instance devraient utiliser la même logique que ones, twos, threes (mais factorisée).
         $sum = 0;
         for ($at = 0; $at !== 5; $at++) {
             if ($this->dice[$at] === 4) {
@@ -174,7 +163,7 @@ class yatzy
         }
         return $sum;
     }
-//methode standard yatzy non tester.
+
     public function sevens(): int
     {
         $sum = 0;
@@ -185,10 +174,7 @@ class yatzy
         }
         return $sum;
     }
-    /**
-     * SMELL: Duplication de code (L159-161) pour le comptage des dés.
-     * Et à nouveau, la méthode prend 5 arguments au lieu d'utiliser $this->dice.
-     */
+
     public function score_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $counts = array_fill(0, 6, 0);
@@ -204,9 +190,7 @@ class yatzy
         }
         return 0;
     }
-    /**
-     * SMELL: Duplication de code (L169-172) pour le comptage des dés.
-     */
+
     public static function two_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $counts = array_fill(0, 6, 0);
@@ -282,11 +266,7 @@ class yatzy
         }
         return 0;
     }
-    /**
-     * SMELL: Logique complexe et variables obscures (L237-264).
-     * Utilisation de booléens et de variables obscures ($_2, $_3, $_2_at, $_3_at) pour suivre l'état.
-     * Très difficile à lire et à maintenir, surtout en présence de la duplication de comptage (L240-245).
-     */
+
     public static function fullHouse(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $tallies = [];
