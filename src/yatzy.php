@@ -21,24 +21,6 @@ class yatzy
         $this->dice[3] = $d4;
         $this->dice[4] = $_5;
     }
-
-    /**
-     * NOUVEAU : Méthode statique utilitaire pour compter les occurrences des dés.
-     * Ceci supprime la duplication de code dans toutes les méthodes d'évaluation (yatzyScore, fullHouse, etc.)
-     * en acceptant le même format d'input (5 arguments séparés).
-     */
-    private static function getDiceCountsFromArgs(int $d1, int $d2, int $d3, int $d4, int $d5): array
-    {
-        $dice = [$d1, $d2, $d3, $d4, $d5];
-        $counts = array_fill(0, 6, 0); // Index 0 pour dé 1, index 5 pour dé 6
-
-        foreach ($dice as $die) {
-            if ($die >= 1 && $die <= 6) {
-                $counts[$die - 1]++;
-            }
-        }
-        return $counts;
-    }
     /**
      * SMELL: Incohérence dans l'input.
      * Cette fonction, comme beaucoup d'autres, prend 5 arguments séparés (d1 à d5),
@@ -47,7 +29,13 @@ class yatzy
      */
     public static function chance(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        return $d1 + $d2 + $d3 + $d4 + $d5;
+        $total = 0;
+        $total += $d1;
+        $total += $d2;
+        $total += $d3;
+        $total += $d4;
+        $total += $d5;
+        return $total;
     }
 
     /**
@@ -70,6 +58,20 @@ class yatzy
         return 0;
     }
 
+    /*public static function oldYatzyScore(array $dice): int
+    {
+        // Etait buggé...
+        $counts = array_fill(0, 5, 0);
+        foreach ($dice as $die) {
+            ++$counts[$die - 1];
+        }
+        foreach (range(0, count($counts) - 1) as $i) {
+            if ($counts[$i] === 5) {
+                return 50;
+            }
+        }
+        return 0;
+    }*/
 
     public static function ones(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
@@ -150,7 +152,7 @@ class yatzy
         return $sum;
     }
 
-    public function fives(): int
+    public function Fives(): int
     {
         $s = 0;
         $i = 0;
@@ -187,9 +189,9 @@ class yatzy
      * SMELL: Duplication de code (L159-161) pour le comptage des dés.
      * Et à nouveau, la méthode prend 5 arguments au lieu d'utiliser $this->dice.
      */
-    public function scorePair(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public function score_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $counts = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
+        $counts = array_fill(0, 6, 0);
         ++$counts[$d1 - 1];
         ++$counts[$d2 - 1];
         ++$counts[$d3 - 1];
@@ -205,9 +207,9 @@ class yatzy
     /**
      * SMELL: Duplication de code (L169-172) pour le comptage des dés.
      */
-    public static function twoPair(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function two_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $counts = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
+        $counts = array_fill(0, 6, 0);
         ++$counts[$d1 - 1];
         ++$counts[$d2 - 1];
         ++$counts[$d3 - 1];
@@ -229,9 +231,9 @@ class yatzy
         return 0;
     }
 
-    public static function threeOfaKind(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function three_of_a_kind(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $t = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
+        $t = array_fill(0, 6, 0);
         ++$t[$d1 - 1];
         ++$t[$d2 - 1];
         ++$t[$d3 - 1];
@@ -247,7 +249,7 @@ class yatzy
 
     public static function smallStraight(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
-        $tallies = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
+        $tallies = array_fill(0, 6, 0);
         ++$tallies[$d1 - 1];
         ++$tallies[$d2 - 1];
         ++$tallies[$d3 - 1];
@@ -282,8 +284,8 @@ class yatzy
     }
     /**
      * SMELL: Logique complexe et variables obscures (L237-264).
-     * Utilisation de booléens et de variables obscures ($_2, $_3, $_2_at, $_3_at).
-     * Très difficile à lire et à maintenir, surtout en présence de la duplication de comptage.
+     * Utilisation de booléens et de variables obscures ($_2, $_3, $_2_at, $_3_at) pour suivre l'état.
+     * Très difficile à lire et à maintenir, surtout en présence de la duplication de comptage (L240-245).
      */
     public static function fullHouse(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
