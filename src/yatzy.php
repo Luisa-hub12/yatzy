@@ -70,20 +70,6 @@ class yatzy
         return 0;
     }
 
-    /*public static function oldYatzyScore(array $dice): int
-    {
-        // Etait buggé...
-        $counts = array_fill(0, 5, 0);
-        foreach ($dice as $die) {
-            ++$counts[$die - 1];
-        }
-        foreach (range(0, count($counts) - 1) as $i) {
-            if ($counts[$i] === 5) {
-                return 50;
-            }
-        }
-        return 0;
-    }*/
 
     public static function ones(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
@@ -164,7 +150,7 @@ class yatzy
         return $sum;
     }
 
-    public function Fives(): int
+    public function fives(): int
     {
         $s = 0;
         $i = 0;
@@ -201,7 +187,7 @@ class yatzy
      * SMELL: Duplication de code (L159-161) pour le comptage des dés.
      * Et à nouveau, la méthode prend 5 arguments au lieu d'utiliser $this->dice.
      */
-    public function score_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public function scorePair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $counts = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
         ++$counts[$d1 - 1];
@@ -219,7 +205,7 @@ class yatzy
     /**
      * SMELL: Duplication de code (L169-172) pour le comptage des dés.
      */
-    public static function two_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function twoPair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $counts = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
         ++$counts[$d1 - 1];
@@ -243,7 +229,7 @@ class yatzy
         return 0;
     }
 
-    public static function three_of_a_kind(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function threeOfaKind(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $t = self::getDiceCountsFromArgs($d1, $d2, $d3, $d4, $d5);
         ++$t[$d1 - 1];
