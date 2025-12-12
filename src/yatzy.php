@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace Yatzy;
 
-class yatzy
+class Yatzy
 {
+
     /**
      * @var array<int, int>
      */
     private array $dice;
 
-    public function __construct(int $d1, int $d2, int $d3, int $d4, int $_5)
+
+
+    public function __construct(int $d1, int $d2, int $d3, int $d4, int $d5)
     {
         $this->dice = array_fill(0, 5, 0);
         $this->dice[0] = $d1;
         $this->dice[1] = $d2;
         $this->dice[2] = $d3;
         $this->dice[3] = $d4;
-        $this->dice[4] = $_5;
+        $this->dice[4] = $d5;
     }
 
-    public static function chance(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function addSumDice(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $total = 0;
         $total += $d1;
@@ -33,149 +36,34 @@ class yatzy
     }
 
     /**
-     * @param array<int, int> $dice
+     * @param array<int, int> $dices
      */
-    public static function yatzyScore(array $dice): int
+    public static function Score(array $dices): int
     {
-        $counts = array_fill(0, 6, 0);
-        foreach ($dice as $die) {
-            ++$counts[$die - 1];
+        $counts = array_count_values($dices);
+        if (in_array(5, $counts)) {
+            return 50;
         }
-        foreach (range(0, count($counts) - 1) as $i) {
-            if ($counts[$i] === 5) {
-                return 50;
-            }
-        }
+
         return 0;
     }
 
-    /*public static function oldYatzyScore(array $dice): int
-    {
-        // Etait buggé...
-        $counts = array_fill(0, 5, 0);
-        foreach ($dice as $die) {
-            ++$counts[$die - 1];
-        }
-        foreach (range(0, count($counts) - 1) as $i) {
-            if ($counts[$i] === 5) {
-                return 50;
-            }
-        }
-        return 0;
-    }*/
-
-    public static function ones(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    /**
+     * @param array<int, int> $dices
+     */
+    public static function numberOfValue(array $dices, int $value): int
     {
         $sum = 0;
-        if ($d1 === 1) {
-            ++$sum;
-        }
-        if ($d2 === 1) {
-            ++$sum;
-        }
-        if ($d3 === 1) {
-            ++$sum;
-        }
-        if ($d4 === 1) {
-            ++$sum;
-        }
-        if ($d5 === 1) {
-            ++$sum;
-        }
-
-        return $sum;
-    }
-
-    public static function twos(int $d1, int $d2, int $d3, int $d4, int $d5): int
-    {
-        $sum = 0;
-        if ($d1 === 2) {
-            $sum += 2;
-        }
-        if ($d2 === 2) {
-            $sum += 2;
-        }
-        if ($d3 === 2) {
-            $sum += 2;
-        }
-        if ($d4 === 2) {
-            $sum += 2;
-        }
-        if ($d5 === 2) {
-            $sum += 2;
-        }
-
-        return $sum;
-    }
-
-    public static function threes(int $d1, int $d2, int $d3, int $d4, int $d5): int
-    {
-        $s = 0;
-        if ($d1 === 3) {
-            $s += 3;
-        }
-        if ($d2 === 3) {
-            $s += 3;
-        }
-        if ($d3 === 3) {
-            $s += 3;
-        }
-        if ($d4 === 3) {
-            $s += 3;
-        }
-        if ($d5 === 3) {
-            $s += 3;
-        }
-
-        return $s;
-    }
-
-    public function fours(): int
-    {
-        $sum = 0;
-        for ($at = 0; $at !== 5; $at++) {
-            if ($this->dice[$at] === 4) {
-                $sum += 4;
+        foreach ($dices as $dice) {
+            if($dice === $value) {
+                $sum += $value;
             }
         }
         return $sum;
     }
 
-    public function Fives(): int
-    {
-        $s = 0;
-        $i = 0;
-        for ($i = 0; $i < 5; $i++) {
-            if ($this->dice[$i] === 5) {
-                $s = $s + 5;
-            }
-        }
-        return $s;
-    }
-
-    public function sixes(): int
-    {
-        $sum = 0;
-        for ($at = 0; $at < 5; $at++) {
-            if ($this->dice[$at] === 6) {
-                $sum = $sum + 6;
-            }
-        }
-        return $sum;
-    }
-
-    public function sevens(): int
-    {
-        $sum = 0;
-        for ($at = 0; $at < 5; $at++) {
-            if ($this->dice[$at] === 7) {
-                $sum = $sum + 7;
-            }
-        }
-        return $sum;
-    }
-
-    public function score_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    //Trop d'arguments dans la fonction, à mettre dans un objet
+    public function scorePair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $counts = array_fill(0, 6, 0);
         ++$counts[$d1 - 1];
@@ -191,7 +79,7 @@ class yatzy
         return 0;
     }
 
-    public static function two_pair(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function TwoPair(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $counts = array_fill(0, 6, 0);
         ++$counts[$d1 - 1];
@@ -215,7 +103,7 @@ class yatzy
         return 0;
     }
 
-    public static function three_of_a_kind(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function threeOfaKind(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $t = array_fill(0, 6, 0);
         ++$t[$d1 - 1];
@@ -267,7 +155,7 @@ class yatzy
         return 0;
     }
 
-    public static function fullHouse(int $d1, int $d2, int $d3, int $d4, int $d5): int
+    public static function House(int $d1, int $d2, int $d3, int $d4, int $d5): int
     {
         $tallies = [];
         $_2 = false;
